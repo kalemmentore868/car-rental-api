@@ -17,78 +17,71 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(authenticateFirebaseToken);
+app.post("/sendEmail", async (req: Request, res: Response): Promise<any> => {
+  const { contractData } = req.body;
 
-app.post(
-  "/sendEmail",
-  authenticateFirebaseToken,
-  ensureLoggedIn,
-  async (req: Request, res: Response): Promise<any> => {
-    const { contractData } = req.body;
-
-    if (!contractData || !contractData.userId) {
-      return res.status(400).json({ error: "Missing contract data or userId" });
-    }
-
-    try {
-      // Fetch customer data
-      const userSnap = await db
-        .collection("users")
-        .doc(contractData.userId)
-        .get();
-
-      if (!userSnap.exists) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      const user = userSnap.data() as AppUser;
-
-      if (!user?.email) {
-        return res.status(400).json({ error: "User has no email address" });
-      }
-
-      // Fetch admin users
-      const adminSnap = await db
-        .collection("users")
-        .where("type", "==", "admin")
-        .get();
-
-      const platformUrl = process.env.PLATFROM_URL || "http://localhost:5173";
-      const adminEmails = adminSnap.docs
-        .map((doc) => doc.data())
-        .filter((u) => u.email)
-        .map((admin) => ({
-          email: admin.email,
-          html: generateAdminEmailTemplate(contractData, user, platformUrl),
-        }));
-
-      // Send to all admins
-      await Promise.all(
-        adminEmails.map(({ email, html }) =>
-          sendMail({
-            to: email,
-            subject: "🚗 New Rental Contract Submitted",
-            html,
-          })
-        )
-      );
-
-      // Send confirmation to customer
-      const customerHtml = generateCustomerEmailTemplate(contractData, user);
-
-      await sendMail({
-        to: user.email,
-        subject: "✅ Your Rental Contract Submission",
-        html: customerHtml,
-      });
-
-      res.json({ success: true });
-    } catch (err) {
-      console.error("Email sending failed:", err);
-      res.status(500).json({ error: "Failed to send email" });
-    }
+  if (!contractData || !contractData.userId) {
+    return res.status(400).json({ error: "Missing contract data or userId" });
   }
-);
+
+  try {
+    // Fetch customer data
+    const userSnap = await db
+      .collection("users")
+      .doc(contractData.userId)
+      .get();
+
+    if (!userSnap.exists) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const user = userSnap.data() as AppUser;
+
+    if (!user?.email) {
+      return res.status(400).json({ error: "User has no email address" });
+    }
+
+    // Fetch admin users
+    const adminSnap = await db
+      .collection("users")
+      .where("type", "==", "admin")
+      .get();
+
+    const platformUrl = process.env.PLATFROM_URL || "http://localhost:5173";
+    const adminEmails = adminSnap.docs
+      .map((doc) => doc.data())
+      .filter((u) => u.email)
+      .map((admin) => ({
+        email: admin.email,
+        html: generateAdminEmailTemplate(contractData, user, platformUrl),
+      }));
+
+    // Send to all admins
+    await Promise.all(
+      adminEmails.map(({ email, html }) =>
+        sendMail({
+          to: email,
+          subject: "🚗 New Rental Contract Submitted",
+          html,
+        })
+      )
+    );
+
+    // Send confirmation to customer
+    const customerHtml = generateCustomerEmailTemplate(contractData, user);
+
+    await sendMail({
+      to: user.email,
+      subject: "✅ Your Rental Contract Submission",
+      html: customerHtml,
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Email sending failed:", err);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
 
 app.post(
   "/sendEmailWithAttachment",

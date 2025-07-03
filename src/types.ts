@@ -35,25 +35,7 @@ export interface Driver {
   birthDate: string;
   address: string;
   phone: string;
-}
-
-export interface Car {
-  carLicenseNo: string;
-  carMake: string;
-  carModel: string;
-  carColor: string;
-  carMonthlyRate: number;
-  carDailyRate: number;
-}
-
-export interface Driver {
-  name: string;
-  permitNumber: string;
-  issueDate: string;
-  expiryDate: string;
-  birthDate: string;
-  address: string;
-  phone: string;
+  permitImageUrl: string;
 }
 
 export interface Car {
@@ -69,6 +51,8 @@ export interface ContractFormData {
   id?: string;
   userId: string;
 
+  email: string;
+
   // Primary driver
   name: string;
   permitNumber: string;
@@ -77,6 +61,7 @@ export interface ContractFormData {
   birthDate: string;
   address: string;
   phone: string;
+  permitImageUrl: string;
 
   additionalDrivers?: Driver[];
 
@@ -109,6 +94,9 @@ export interface ContractFormData {
   timeOut: string;
   dateDue: string;
   timeIn: string;
+  pickUpLocation?: string;
+  childSeatNeeded?: string;
+  additionalNotes?: string;
 
   approved: boolean;
   mileageIn?: number;
@@ -116,4 +104,7 @@ export interface ContractFormData {
   dateCreated?: string;
   amount?: number;
   returnLocation?: string;
+
+  noOfDays?: number;
+  amountPaid?: number;
 }

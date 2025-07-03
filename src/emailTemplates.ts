@@ -18,16 +18,18 @@ export function generateCustomerEmailTemplate(
         <li><strong>Rental Dates:</strong> ${contract.dateOut} ${
     contract.timeOut
   } → ${contract.dateDue} ${contract.timeIn}</li>
+        <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
         <li><strong>Daily Rate:</strong> $${contract.carDailyRate.toFixed(
           2
         )}</li>
+        <li><strong>Total:</strong> $${contract.amountPaid?.toFixed(2)}</li>
       </ul>
 
       ${
-        contract.additionalCars && contract.additionalCars.length > 0
+        contract.additionalCars?.length
           ? `
-        <h4>Additional Cars:</h4>
-        <ul>
+        <h4 style="margin-top: 20px;">Additional Cars</h4>
+        <ul style="line-height: 1.6;">
           ${contract.additionalCars
             .map(
               (car) =>
@@ -41,12 +43,30 @@ export function generateCustomerEmailTemplate(
           : ""
       }
 
-      <p style="margin-top: 20px;">
-        We’ll review your request and follow up shortly. If you have questions, feel free to contact us.
+      ${
+        contract.pickUpLocation
+          ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation}</p>`
+          : ""
+      }
+
+      ${
+        contract.childSeatNeeded
+          ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
+          : ""
+      }
+
+      ${
+        contract.additionalNotes
+          ? `<h4 style="margin-top: 20px;">Additional Comments</h4><p>${contract.additionalNotes}</p>`
+          : ""
+      }
+
+      <p style="margin-top: 30px;">
+        We’ll review your request and follow up shortly. If you have any questions, feel free to contact us.
       </p>
 
       <p style="margin-top: 40px; font-size: 0.9em; color: #777;">
-        ${new Date().toLocaleString()}
+        Submitted: ${new Date().toLocaleString()}
       </p>
     </div>
   `;
@@ -57,24 +77,6 @@ export function generateAdminEmailTemplate(
   user: AppUser,
   platformUrl: string
 ): string {
-  const rentalDays = Math.max(
-    Math.ceil(
-      (new Date(contract.dateDue).getTime() -
-        new Date(contract.dateOut).getTime()) /
-        (1000 * 60 * 60 * 24)
-    ),
-    1
-  );
-
-  const primaryTotal = rentalDays * contract.carDailyRate;
-  const additionalTotal =
-    contract.additionalCars?.reduce(
-      (acc, car) => acc + rentalDays * car.carDailyRate,
-      0
-    ) || 0;
-
-  const grandTotal = primaryTotal + additionalTotal;
-
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; color: #222;">
       <h2 style="color: #B30000;">New Rental Contract Submitted</h2>
@@ -83,12 +85,10 @@ export function generateAdminEmailTemplate(
       <ul style="line-height: 1.6;">
         <li><strong>Name:</strong> ${user.firstName} ${user.lastName}</li>
         <li><strong>Email:</strong> ${user.email}</li>
-        <li><strong>Phone:</strong> ${user.profile?.phone}</li>
-        <li><strong>Permit No.:</strong> ${user.profile?.permitNumber}</li>
-        <li><strong>Nationality:</strong> ${
-          user.profile?.nationality || "N/A"
-        }</li>
-        <li><strong>Birth Date:</strong> ${user.profile?.birthDate}</li>
+        <li><strong>Phone:</strong> ${contract.phone}</li>
+        <li><strong>Permit No.:</strong> ${contract.permitNumber}</li>
+        <li><strong>Birth Date:</strong> ${contract.birthDate}</li>
+        <li><strong>Address:</strong> ${contract.address}</li>
       </ul>
 
       <h3 style="margin-top: 20px;">Primary Car</h3>
@@ -100,8 +100,10 @@ export function generateAdminEmailTemplate(
         <li><strong>Daily Rate:</strong> $${contract.carDailyRate.toFixed(
           2
         )}</li>
-        <li><strong>Rental Duration:</strong> ${rentalDays} day(s)</li>
-        <li><strong>Subtotal:</strong> $${primaryTotal.toFixed(2)}</li>
+        <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
+        <li><strong>Subtotal:</strong> $${(
+          contract.carDailyRate * (contract.noOfDays || 1)
+        ).toFixed(2)}</li>
       </ul>
 
       ${
@@ -112,24 +114,39 @@ export function generateAdminEmailTemplate(
           ${contract.additionalCars
             .map(
               (car) => `
-            <li>
-              ${car.carMake} ${car.carModel} (${
-                car.carLicenseNo
-              }) - $${car.carDailyRate.toFixed(
-                2
-              )}/day × ${rentalDays} days = $${(
-                car.carDailyRate * rentalDays
-              ).toFixed(2)}
-            </li>`
+              <li>
+                ${car.carMake} ${car.carModel} (${car.carLicenseNo}) - 
+                $${car.carDailyRate.toFixed(2)}/day × ${
+                contract.noOfDays
+              } days = 
+                $${(car.carDailyRate * (contract.noOfDays || 1)).toFixed(2)}
+              </li>`
             )
             .join("")}
         </ul>
-        <p><strong>Additional Total:</strong> $${additionalTotal.toFixed(2)}</p>
       `
           : ""
       }
 
-      <h3>Total: <span style="color: green;">$${grandTotal.toFixed(
+      ${
+        contract.pickUpLocation
+          ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation}</p>`
+          : ""
+      }
+
+      ${
+        contract.childSeatNeeded
+          ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
+          : ""
+      }
+
+      ${
+        contract.additionalNotes
+          ? `<h3>Additional Comments</h3><p>${contract.additionalNotes}</p>`
+          : ""
+      }
+
+      <h3>Total Amount: <span style="color: green;">$${contract.amountPaid?.toFixed(
         2
       )}</span></h3>
 
