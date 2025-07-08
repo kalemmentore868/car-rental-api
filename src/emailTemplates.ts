@@ -146,7 +146,7 @@ export function generateAdminEmailTemplate(
           : ""
       }
 
-      <h3>Total Amount: <span style="color: green;">$${contract.amountPaid?.toFixed(
+      <h3>Total Amount: <span style="color: green;">$${contract.amount?.toFixed(
         2
       )}</span></h3>
 
