@@ -17,6 +17,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/ping", (req: Request, res: Response): any => {
+  return res.status(200).json({ message: "pong" });
+});
+
 app.post("/sendEmail", async (req: Request, res: Response): Promise<any> => {
   const { contractData } = req.body;
 
