@@ -22,7 +22,7 @@ export function generateCustomerEmailTemplate(
         <li><strong>Daily Rate:</strong> $${contract.carDailyRate.toFixed(
           2
         )}</li>
-        <li><strong>Total:</strong> $${contract.amountPaid?.toFixed(2)}</li>
+     
       </ul>
 
       ${
@@ -45,7 +45,11 @@ export function generateCustomerEmailTemplate(
 
       ${
         contract.pickUpLocation
-          ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation}</p>`
+          ? `<p><strong>Pick Up Location:</strong> ${
+              contract.pickUpLocation === "Wharf"
+                ? contract.pickUpLocation + " -$100 Fee"
+                : contract.pickUpLocation
+            }</p>`
           : ""
       }
 
@@ -101,9 +105,7 @@ export function generateAdminEmailTemplate(
           2
         )}</li>
         <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
-        <li><strong>Subtotal:</strong> $${(
-          contract.carDailyRate * (contract.noOfDays || 1)
-        ).toFixed(2)}</li>
+       
       </ul>
 
       ${
@@ -130,7 +132,11 @@ export function generateAdminEmailTemplate(
 
       ${
         contract.pickUpLocation
-          ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation}</p>`
+          ? `<p><strong>Pick Up Location:</strong> ${
+              contract.pickUpLocation === "Wharf"
+                ? contract.pickUpLocation + " -$100 Fee"
+                : contract.pickUpLocation
+            }</p>`
           : ""
       }
 
@@ -146,9 +152,7 @@ export function generateAdminEmailTemplate(
           : ""
       }
 
-      <h3>Total Amount: <span style="color: green;">$${contract.amount?.toFixed(
-        2
-      )}</span></h3>
+    
 
       <p style="margin-top: 30px;">
         <a href="${platformUrl}" style="display:inline-block; background-color:#0B5394; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;">
@@ -253,13 +257,7 @@ export function generateCustomerEmailTemplateWithAttachments(
         : ""
     }
 
-    ${
-      contract.amount !== undefined
-        ? `<p style="margin-top: 20px; font-size: 16px;"><strong>Total Estimated Amount:</strong> <span style="color: green;">$${contract.amount.toFixed(
-            2
-          )}</span></p>`
-        : ""
-    }
+   
 
     <p style="margin-top: 30px; font-size: 14px;">Contract Reference: <strong>${shortId}</strong></p>
 
