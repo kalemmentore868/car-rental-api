@@ -19,9 +19,7 @@ export function generateCustomerEmailTemplate(
     contract.timeOut
   } → ${contract.dateDue} ${contract.timeIn}</li>
         <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
-        <li><strong>Daily Rate:</strong> $${contract.carDailyRate.toFixed(
-          2
-        )}</li>
+    
      
       </ul>
 
@@ -33,9 +31,7 @@ export function generateCustomerEmailTemplate(
           ${contract.additionalCars
             .map(
               (car) =>
-                `<li>${car.carMake} ${car.carModel} (${
-                  car.carLicenseNo
-                }) @ $${car.carDailyRate.toFixed(2)}/day</li>`
+                `<li>${car.carMake} ${car.carModel} (${car.carLicenseNo})</li>`
             )
             .join("")}
         </ul>
@@ -101,9 +97,7 @@ export function generateAdminEmailTemplate(
     contract.carModel
   } (${contract.carColor})</li>
         <li><strong>License Plate:</strong> ${contract.carLicenseNo}</li>
-        <li><strong>Daily Rate:</strong> $${contract.carDailyRate.toFixed(
-          2
-        )}</li>
+      
         <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
        
       </ul>
@@ -117,11 +111,7 @@ export function generateAdminEmailTemplate(
             .map(
               (car) => `
               <li>
-                ${car.carMake} ${car.carModel} (${car.carLicenseNo}) - 
-                $${car.carDailyRate.toFixed(2)}/day × ${
-                contract.noOfDays
-              } days = 
-                $${(car.carDailyRate * (contract.noOfDays || 1)).toFixed(2)}
+                ${car.carMake} ${car.carModel} (${car.carLicenseNo}) 
               </li>`
             )
             .join("")}
@@ -224,9 +214,7 @@ export function generateCustomerEmailTemplateWithAttachments(
       <tr><td><strong>License Plate:</strong></td><td>${
         contract.carLicenseNo
       }</td></tr>
-      <tr><td><strong>Daily Rate:</strong></td><td>$${contract.carDailyRate.toFixed(
-        2
-      )}</td></tr>
+     
       <tr><td><strong>Rental Dates:</strong></td><td>${
         contract.dateOut
       } ${formatTime(contract.timeOut)} → ${contract.dateDue} ${formatTime(
@@ -247,9 +235,7 @@ export function generateCustomerEmailTemplateWithAttachments(
         ${contract.additionalCars
           .map(
             (car) =>
-              `<li>${car.carMake} ${car.carModel} (${
-                car.carLicenseNo
-              }) @ $${car.carDailyRate.toFixed(2)}/day</li>`
+              `<li>${car.carMake} ${car.carModel} (${car.carLicenseNo}) </li>`
           )
           .join("")}
       </ul>
