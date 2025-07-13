@@ -107,4 +107,6 @@ export interface ContractFormData {
 
   noOfDays?: number;
   amountPaid?: number;
+  flightNumber?: string;
+  hotelAddress?: string;
 }

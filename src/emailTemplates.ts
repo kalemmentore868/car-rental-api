@@ -135,6 +135,12 @@ export function generateAdminEmailTemplate(
           : ""
       }
 
+          <p><strong>Rental Dates:</strong> ${contract.dateOut} ${
+    contract.timeOut
+  } → ${contract.dateDue} ${contract.timeIn}</p>
+
+  <p><strong>Flight Number/Vessel Name:</strong> ${contract.flightNumber}</p>
+
     
 
       <p style="margin-top: 30px;">
