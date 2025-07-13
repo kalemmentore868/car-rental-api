@@ -11,14 +11,12 @@ export function generateCustomerEmailTemplate(
 
       <h3 style="margin-top: 20px;">Rental Details</h3>
       <ul style="line-height: 1.6;">
-        <li><strong>Car:</strong> ${contract.carMake} ${contract.carModel} (${
-    contract.carColor
-  })</li>
-        <li><strong>License Plate:</strong> ${contract.carLicenseNo}</li>
+        <li><strong>Car:</strong> ${contract.carMake} ${contract.carModel} </li>
+       
         <li><strong>Rental Dates:</strong> ${contract.dateOut} ${
     contract.timeOut
   } → ${contract.dateDue} ${contract.timeIn}</li>
-        <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
+       
     
      
       </ul>
@@ -29,10 +27,7 @@ export function generateCustomerEmailTemplate(
         <h4 style="margin-top: 20px;">Additional Cars</h4>
         <ul style="line-height: 1.6;">
           ${contract.additionalCars
-            .map(
-              (car) =>
-                `<li>${car.carMake} ${car.carModel} (${car.carLicenseNo})</li>`
-            )
+            .map((car) => `<li>${car.carMake} ${car.carModel} </li>`)
             .join("")}
         </ul>
       `
@@ -95,10 +90,8 @@ export function generateAdminEmailTemplate(
       <ul style="line-height: 1.6;">
         <li><strong>Vehicle:</strong> ${contract.carMake} ${
     contract.carModel
-  } (${contract.carColor})</li>
-        <li><strong>License Plate:</strong> ${contract.carLicenseNo}</li>
+  } </li>
       
-        <li><strong>Rental Duration:</strong> ${contract.noOfDays} day(s)</li>
        
       </ul>
 
@@ -111,7 +104,7 @@ export function generateAdminEmailTemplate(
             .map(
               (car) => `
               <li>
-                ${car.carMake} ${car.carModel} (${car.carLicenseNo}) 
+                ${car.carMake} ${car.carModel} 
               </li>`
             )
             .join("")}
@@ -210,10 +203,8 @@ export function generateCustomerEmailTemplateWithAttachments(
     <table cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
       <tr><td><strong>Car:</strong></td><td>${contract.carMake} ${
     contract.carModel
-  } (${contract.carColor})</td></tr>
-      <tr><td><strong>License Plate:</strong></td><td>${
-        contract.carLicenseNo
-      }</td></tr>
+  } </td></tr>
+     
      
       <tr><td><strong>Rental Dates:</strong></td><td>${
         contract.dateOut
@@ -233,10 +224,7 @@ export function generateCustomerEmailTemplateWithAttachments(
       <h4 style="margin-top: 25px;">Additional Cars</h4>
       <ul style="padding-left: 20px;">
         ${contract.additionalCars
-          .map(
-            (car) =>
-              `<li>${car.carMake} ${car.carModel} (${car.carLicenseNo}) </li>`
-          )
+          .map((car) => `<li>${car.carMake} ${car.carModel}  </li>`)
           .join("")}
       </ul>
     `
