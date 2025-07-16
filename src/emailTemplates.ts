@@ -84,6 +84,11 @@ export function generateAdminEmailTemplate(
         <li><strong>Permit No.:</strong> ${contract.permitNumber}</li>
         <li><strong>Birth Date:</strong> ${contract.birthDate}</li>
         <li><strong>Address:</strong> ${contract.address}</li>
+        <li><strong>Rental Dates:</strong> ${contract.dateOut} ${
+    contract.timeOut
+  } → ${contract.dateDue} ${contract.timeIn}</li>
+
+  <li><strong>Flight Number/Vessel Name:</strong> ${contract.flightNumber}</li>
       </ul>
 
       <h3 style="margin-top: 20px;">Primary Car</h3>
@@ -135,11 +140,7 @@ export function generateAdminEmailTemplate(
           : ""
       }
 
-          <p><strong>Rental Dates:</strong> ${contract.dateOut} ${
-    contract.timeOut
-  } → ${contract.dateDue} ${contract.timeIn}</p>
-
-  <p><strong>Flight Number/Vessel Name:</strong> ${contract.flightNumber}</p>
+          
 
     
 
