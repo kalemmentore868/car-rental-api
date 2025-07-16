@@ -10,6 +10,7 @@ import {
 } from "./emailTemplates";
 import { AppUser, ContractFormData } from "./types";
 import multer from "multer";
+import { auth } from "firebase-admin";
 const upload = multer();
 
 dotenv.config();
@@ -135,6 +136,29 @@ app.post(
     } catch (err) {
       console.error("Email sending with attachment failed:", err);
       res.status(500).json({ error: "Failed to send email with attachment" });
+    }
+  }
+);
+
+app.delete(
+  "/users/:uid",
+  authenticateFirebaseToken, // must be logged-in Firebase user
+  ensureLoggedIn, // we already use this
+  async (req: Request, res: Response): Promise<any> => {
+    try {
+      /* ─────────────────────────────────────── */
+      /* 1️⃣  Only admins may delete users      */
+      /* ─────────────────────────────────────── */
+
+      const uid = req.params.uid;
+      if (!uid) return res.status(400).json({ error: "uid required" });
+
+      if (auth) await auth().deleteUser(uid);
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("DELETE /users/:uid failed:", err);
+      return res.status(500).json({ error: "Internal error" });
     }
   }
 );
