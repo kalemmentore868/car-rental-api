@@ -95,6 +95,7 @@ app.post(
   async (req: Request, res: Response): Promise<any> => {
     const contractDataStr = req.body.contractData;
     const file = req.file;
+    console.log("here");
 
     if (!contractDataStr || !file) {
       return res.status(400).json({ error: "Missing data or file" });
@@ -116,7 +117,7 @@ app.post(
         contractData,
         user
       );
-      await sendMail({
+      const response = await sendMail({
         to: user.email,
         subject: "✅ Your Rental Contract",
         html: customerHtml,
@@ -127,6 +128,8 @@ app.post(
           },
         ],
       });
+
+      console.log(response);
 
       res.json({ success: true });
     } catch (err) {
