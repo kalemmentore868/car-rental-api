@@ -88,10 +88,11 @@ export function generateAdminEmailTemplate(
     contract.timeOut
   } → ${contract.dateDue} ${contract.timeIn}</li>
 
-  ${
-    contract.flightNumber &&
-    ` <li><strong>Flight Number/Vessel Name:</strong> ${contract.flightNumber}</li>`
-  }
+ 
+     <li><strong>Flight Number/Vessel Name:</strong> ${
+       contract.flightNumber
+     }</li>
+  
  
       </ul>
 
