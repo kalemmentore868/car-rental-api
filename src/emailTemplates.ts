@@ -150,7 +150,7 @@ export function generateAdminEmailTemplate(
     
 
       <p style="margin-top: 30px;">
-        <a href="${platformUrl}/admin/dashboard" style="display:inline-block; background-color:#0B5394; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;">
+        <a href="${platformUrl}admin/dashboard" style="display:inline-block; background-color:#0B5394; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;">
           View in Admin Dashboard
         </a>
       </p>
