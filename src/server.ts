@@ -163,6 +163,46 @@ app.delete(
   }
 );
 
+app.post(
+  "/contractDeclined",
+  authenticateFirebaseToken,
+  ensureLoggedIn,
+  async (req: Request, res: Response): Promise<any> => {
+    const { contractId, declineReason, email, name } = req.body;
+
+    if (!contractId || !declineReason || !email || !name) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+      const html = `
+        <div style="font-family: sans-serif; line-height: 1.5;">
+          <p>Dear ${name},</p>
+          <p>We regret to inform you that your rental contract request (ID: <strong>${contractId}</strong>) has been declined.</p>
+          <p><strong>Reason:</strong></p>
+          <blockquote style="background: #f8f8f8; padding: 10px; border-left: 4px solid #e53935;">
+            ${declineReason}
+          </blockquote>
+          <p>If you believe this was an error or have further questions, please contact us directly.</p>
+          <p>Thank you for your understanding.</p>
+          <p>— 1st Choice Auto Rentals</p>
+        </div>
+      `;
+
+      await sendMail({
+        to: email,
+        subject: "❌ Rental Contract Declined",
+        html,
+      });
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Failed to send decline email:", err);
+      res.status(500).json({ error: "Failed to send decline email" });
+    }
+  }
+);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
