@@ -178,13 +178,11 @@ app.post(
       const html = `
         <div style="font-family: sans-serif; line-height: 1.5;">
           <p>Dear ${name},</p>
-          <p>We regret to inform you that your rental contract request (ID: <strong>${contractId}</strong>) has been declined.</p>
-          <p><strong>Reason:</strong></p>
-          <blockquote style="background: #f8f8f8; padding: 10px; border-left: 4px solid #e53935;">
-            ${declineReason}
-          </blockquote>
-          <p>If you believe this was an error or have further questions, please contact us directly.</p>
+          <p>Thank you for your interest in our services. At present our units are currently booked and would be unavailable for rentals. We do hope you have an enjoyable time on the island and we’re looking forward to being of service to you in the future. </p>
+         
           <p>Thank you for your understanding.</p>
+
+          <p>Regards,</p>
           <p>— 1st Choice Auto Rentals</p>
         </div>
       `;
