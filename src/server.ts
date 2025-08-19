@@ -11,6 +11,7 @@ import {
 import { AppUser, ContractFormData } from "./types";
 import multer from "multer";
 import { auth } from "firebase-admin";
+import { computeTotalAmount, toTwo } from "./helpers";
 const upload = multer();
 
 dotenv.config();
@@ -200,6 +201,138 @@ app.post(
     }
   }
 );
+
+app.post("/payment", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const {
+      contractData,
+      successUrl: successUrlFromBody,
+      failUrl: failUrlFromBody,
+      currency: currencyFromBody,
+      feeStructure: feeStructureFromBody,
+    }: {
+      contractData: ContractFormData;
+      successUrl?: string;
+      failUrl?: string;
+      currency?: string;
+      feeStructure?: string;
+    } = req.body || {};
+
+    if (!contractData || !contractData.userId) {
+      return res.status(400).json({ error: "contractData.userId is required" });
+    }
+
+    // ----- Config from env -----
+    const isTest = (process.env.HEXA_TEST_MODE ?? "true") === "true";
+    const apiKey = isTest
+      ? process.env.HKA_TEST_API_KEY
+      : process.env.HEXA_API_KEY;
+    const userId = process.env.HKA_USER_ID; // your merchant/user id in Hexakode
+    const currency = currencyFromBody || process.env.HEXA_CURRENCY || "TTD";
+    const fee_structure =
+      feeStructureFromBody || process.env.HEXA_FEE_STRUCTURE || "customer_pays";
+    const frontend = process.env.FRONTEND_URL || "http://localhost:5173";
+
+    if (!apiKey)
+      return res.status(500).json({ error: "Missing Hexakode API key" });
+    if (!userId) return res.status(500).json({ error: "Missing HEXA_USER_ID" });
+
+    const requestUrl = isTest
+      ? "https://api.hexakode-invoicing.com/api/test/off-site/create-payment"
+      : "https://api.hexakode-invoicing.com/api/prod/off-site/create-payment";
+
+    // ----- Build payload -----
+    const order_id =
+      contractData.id ||
+      `order_${Date.now()}_${Math.random().toString(36).slice(2, 8)}_${
+        contractData.userId
+      }`;
+
+    const total = computeTotalAmount(contractData);
+    const customer_name = contractData.name || "Customer";
+    const customer_email = contractData.email || "";
+
+    const success_url =
+      successUrlFromBody ||
+      `${frontend}/payment/return?payment_status=success&order_id=${encodeURIComponent(
+        order_id
+      )}`;
+
+    const fail_url =
+      failUrlFromBody ||
+      `${frontend}/payment/return?payment_status=failure&order_id=${encodeURIComponent(
+        order_id
+      )}`;
+
+    const payload = {
+      order_id,
+      total_amount: toTwo(total), // e.g. "100.00"
+      currency,
+      fee_structure,
+      customer_email,
+      customer_name,
+      success_url,
+      fail_url,
+      user_id: userId,
+    };
+
+    // ----- Call Hexakode -----
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 45_000); // 45s like WP example
+
+    console.log(apiKey, userId, requestUrl, payload);
+
+    const upstream = await fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    }).catch((e) => {
+      throw new Error(
+        `Failed to reach Hexakode: ${
+          e instanceof Error ? e.message : String(e)
+        }`
+      );
+    });
+    clearTimeout(timeout);
+
+    const text = await upstream.text();
+
+    if (!upstream.ok) {
+      return res
+        .status(upstream.status)
+        .json({ error: `Hexakode error: ${text || upstream.statusText}` });
+    }
+
+    let data: any = {};
+    try {
+      data = JSON.parse(text);
+    } catch {
+      // fallback: non-JSON response
+      return res
+        .status(502)
+        .json({ error: "Invalid Hexakode response", raw: text });
+    }
+
+    const redirect = data?.redirect || data?.payment_url;
+    if (!redirect) {
+      return res.status(502).json({
+        error: "Missing redirect URL in Hexakode response",
+        raw: data,
+      });
+    }
+
+    return res.json({ redirect, order_id });
+  } catch (err: any) {
+    console.error("Payment endpoint error:", err);
+    return res
+      .status(500)
+      .json({ error: err?.message || "Failed to create payment" });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
