@@ -96,7 +96,6 @@ app.post(
   async (req: Request, res: Response): Promise<any> => {
     const contractDataStr = req.body.contractData;
     const file = req.file;
-    console.log("here");
 
     if (!contractDataStr || !file) {
       return res.status(400).json({ error: "Missing data or file" });
@@ -190,6 +189,45 @@ app.post(
       await sendMail({
         to: email,
         subject: "❌ Rental Contract Declined",
+        html,
+      });
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Failed to send decline email:", err);
+      res.status(500).json({ error: "Failed to send decline email" });
+    }
+  }
+);
+
+app.post(
+  "/contractApproved",
+  authenticateFirebaseToken,
+  ensureLoggedIn,
+  async (req: Request, res: Response): Promise<any> => {
+    const { contractId, email, name } = req.body;
+
+    if (!contractId || !email || !name) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+      const html = `
+        <div style="font-family: sans-serif; line-height: 1.5;">
+          <p>Dear ${name},</p>
+          <p>Your request to book with us has been approved! </p>
+          <p>We look forward to serving you and ensuring you have a fantastic experience with our rental services.</p>
+         
+          <p>If you have any questions or need further assistance, please don't hesitate to reach out to us.</p>
+
+          <p>Regards,</p>
+          <p>— 1st Choice Auto Rentals</p>
+        </div>
+      `;
+
+      await sendMail({
+        to: email,
+        subject: "✅ Rental Contract Approved",
         html,
       });
 
