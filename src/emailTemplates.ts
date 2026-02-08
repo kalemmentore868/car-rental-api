@@ -13,51 +13,45 @@ export function generateCustomerEmailTemplate(
       <ul style="line-height: 1.6;">
         <li><strong>Car:</strong> ${contract.carMake} ${contract.carModel} </li>
        
-        <li><strong>Rental Dates:</strong> ${contract.dateOut} ${
-    contract.timeOut
-  } → ${contract.dateDue} ${contract.timeIn}</li>
+        <li><strong>Rental Dates:</strong> ${contract.dateOut} ${contract.timeOut
+    } → ${contract.dateDue} ${contract.timeIn}</li>
        
     
      
       </ul>
 
-      ${
-        contract.additionalCars?.length
-          ? `
+      ${contract.additionalCars?.length
+      ? `
         <h4 style="margin-top: 20px;">Additional Cars</h4>
         <ul style="line-height: 1.6;">
           ${contract.additionalCars
-            .map((car) => `<li>${car.carMake} ${car.carModel} </li>`)
-            .join("")}
+        .map((car) => `<li>${car.carMake} ${car.carModel} </li>`)
+        .join("")}
         </ul>
       `
-          : ""
-      }
+      : ""
+    }
 
-      ${
-        contract.pickUpLocation
-          ? `<p><strong>Pick Up Location:</strong> ${
-              contract.pickUpLocation === "Wharf"
-                ? contract.pickUpLocation + " -$100 Fee"
-                : contract.pickUpLocation
-            }</p>`
-          : ""
-      }
+      ${contract.pickUpLocation
+      ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation === "Wharf"
+        ? contract.pickUpLocation + " -$100 Fee"
+        : contract.pickUpLocation
+      }</p>`
+      : ""
+    }
 
-      ${
-        contract.childSeatNeeded
-          ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
-          : ""
-      }
+      ${contract.childSeatNeeded
+      ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
+      : ""
+    }
 
-      ${
-        contract.additionalNotes
-          ? `<h4 style="margin-top: 20px;">Additional Comments</h4><p>${contract.additionalNotes}</p>`
-          : ""
-      }
+      ${contract.additionalNotes
+      ? `<h4 style="margin-top: 20px;">Additional Comments</h4><p>${contract.additionalNotes}</p>`
+      : ""
+    }
 
       <p style="margin-top: 30px;">
-        We’ll review your request and follow up shortly. If you have any questions, feel free to contact us.
+        We’ll review your request and follow up shortly. Please note that confirmation of this booking request is subject to the availability of vehicles. If you have any questions, feel free to contact us.
       </p>
 
       <p style="margin-top: 40px; font-size: 0.9em; color: #777;">
@@ -84,66 +78,58 @@ export function generateAdminEmailTemplate(
         <li><strong>Permit No.:</strong> ${contract.permitNumber}</li>
         <li><strong>Birth Date:</strong> ${contract.birthDate}</li>
         <li><strong>Address:</strong> ${contract.address}</li>
-        <li><strong>Rental Dates:</strong> ${contract.dateOut} ${
-    contract.timeOut
-  } → ${contract.dateDue} ${contract.timeIn}</li>
+        <li><strong>Rental Dates:</strong> ${contract.dateOut} ${contract.timeOut
+    } → ${contract.dateDue} ${contract.timeIn}</li>
 
  
-     <li><strong>Flight Number/Vessel Name:</strong> ${
-       contract.flightNumber
-     }</li>
+     <li><strong>Flight Number/Vessel Name:</strong> ${contract.flightNumber
+    }</li>
   
  
       </ul>
 
       <h3 style="margin-top: 20px;">Primary Car</h3>
       <ul style="line-height: 1.6;">
-        <li><strong>Vehicle:</strong> ${contract.carMake} ${
-    contract.carModel
-  } </li>
+        <li><strong>Vehicle:</strong> ${contract.carMake} ${contract.carModel
+    } </li>
       
        
       </ul>
 
-      ${
-        contract.additionalCars?.length
-          ? `
+      ${contract.additionalCars?.length
+      ? `
         <h3>Additional Cars</h3>
         <ul style="line-height: 1.6;">
           ${contract.additionalCars
-            .map(
-              (car) => `
+        .map(
+          (car) => `
               <li>
                 ${car.carMake} ${car.carModel} 
               </li>`
-            )
-            .join("")}
+        )
+        .join("")}
         </ul>
       `
-          : ""
-      }
+      : ""
+    }
 
-      ${
-        contract.pickUpLocation
-          ? `<p><strong>Pick Up Location:</strong> ${
-              contract.pickUpLocation === "Wharf"
-                ? contract.pickUpLocation + " -$100 Fee"
-                : contract.pickUpLocation
-            }</p>`
-          : ""
-      }
+      ${contract.pickUpLocation
+      ? `<p><strong>Pick Up Location:</strong> ${contract.pickUpLocation === "Wharf"
+        ? contract.pickUpLocation + " -$100 Fee"
+        : contract.pickUpLocation
+      }</p>`
+      : ""
+    }
 
-      ${
-        contract.childSeatNeeded
-          ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
-          : ""
-      }
+      ${contract.childSeatNeeded
+      ? `<p><strong>Child Seat Needed:</strong> ${contract.childSeatNeeded}</p>`
+      : ""
+    }
 
-      ${
-        contract.additionalNotes
-          ? `<h3>Additional Comments</h3><p>${contract.additionalNotes}</p>`
-          : ""
-      }
+      ${contract.additionalNotes
+      ? `<h3>Additional Comments</h3><p>${contract.additionalNotes}</p>`
+      : ""
+    }
 
           
 
@@ -185,62 +171,52 @@ export function generateCustomerEmailTemplateWithAttachments(
     <h3 style="margin-top: 30px; color: #444;">Lessee Information</h3>
     <table cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
       <tr><td><strong>Name:</strong></td><td>${contract.name}</td></tr>
-      <tr><td><strong>Permit #:</strong></td><td>${
-        contract.permitNumber
-      }</td></tr>
-      <tr><td><strong>Issue Date:</strong></td><td>${
-        contract.issueDate
-      }</td></tr>
-      <tr><td><strong>Expiry Date:</strong></td><td>${
-        contract.expiryDate
-      }</td></tr>
-      <tr><td><strong>Birth Date:</strong></td><td>${
-        contract.birthDate
-      }</td></tr>
+      <tr><td><strong>Permit #:</strong></td><td>${contract.permitNumber
+    }</td></tr>
+      <tr><td><strong>Issue Date:</strong></td><td>${contract.issueDate
+    }</td></tr>
+      <tr><td><strong>Expiry Date:</strong></td><td>${contract.expiryDate
+    }</td></tr>
+      <tr><td><strong>Birth Date:</strong></td><td>${contract.birthDate
+    }</td></tr>
       <tr><td><strong>Address:</strong></td><td>${contract.address}</td></tr>
       <tr><td><strong>Phone:</strong></td><td>${contract.phone}</td></tr>
-      ${
-        contract.foreignAddress
-          ? `<tr><td><strong>Foreign Address:</strong></td><td>${contract.foreignAddress}</td></tr>`
-          : ""
-      }
-      ${
-        contract.foreignPhone
-          ? `<tr><td><strong>Foreign Phone:</strong></td><td>${contract.foreignPhone}</td></tr>`
-          : ""
-      }
+      ${contract.foreignAddress
+      ? `<tr><td><strong>Foreign Address:</strong></td><td>${contract.foreignAddress}</td></tr>`
+      : ""
+    }
+      ${contract.foreignPhone
+      ? `<tr><td><strong>Foreign Phone:</strong></td><td>${contract.foreignPhone}</td></tr>`
+      : ""
+    }
     </table>
 
     <h3 style="margin-top: 30px; color: #444;">Vehicle Details</h3>
     <table cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-      <tr><td><strong>Car:</strong></td><td>${contract.carMake} ${
-    contract.carModel
-  } </td></tr>
+      <tr><td><strong>Car:</strong></td><td>${contract.carMake} ${contract.carModel
+    } </td></tr>
      
      
-      <tr><td><strong>Rental Dates:</strong></td><td>${
-        contract.dateOut
-      } ${formatTime(contract.timeOut)} → ${contract.dateDue} ${formatTime(
-    contract.timeIn
-  )}</td></tr>
-      ${
-        contract.returnLocation
-          ? `<tr><td><strong>Return Location:</strong></td><td>${contract.returnLocation}</td></tr>`
-          : ""
-      }
+      <tr><td><strong>Rental Dates:</strong></td><td>${contract.dateOut
+    } ${formatTime(contract.timeOut)} → ${contract.dateDue} ${formatTime(
+      contract.timeIn
+    )}</td></tr>
+      ${contract.returnLocation
+      ? `<tr><td><strong>Return Location:</strong></td><td>${contract.returnLocation}</td></tr>`
+      : ""
+    }
     </table>
 
-    ${
-      contract.additionalCars && contract.additionalCars.length > 0
-        ? `
+    ${contract.additionalCars && contract.additionalCars.length > 0
+      ? `
       <h4 style="margin-top: 25px;">Additional Cars</h4>
       <ul style="padding-left: 20px;">
         ${contract.additionalCars
-          .map((car) => `<li>${car.carMake} ${car.carModel}  </li>`)
-          .join("")}
+        .map((car) => `<li>${car.carMake} ${car.carModel}  </li>`)
+        .join("")}
       </ul>
     `
-        : ""
+      : ""
     }
 
    
