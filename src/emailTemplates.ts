@@ -51,12 +51,13 @@ export function generateCustomerEmailTemplate(
     }
 
       <p style="margin-top: 30px;">
-        We’ll review your request and follow up shortly. Please note that confirmation of this booking request is subject to the availability of vehicles. If you have any questions, feel free to contact us.
-      </p>
-
+        We’ll review your request and follow up shortly.
+        <br><br>
+        <strong><u>Please note that confirmation of this booking request is subject to the availability of vehicles.</u></strong>
+        <br><br>
+        If you have any questions, feel free to contact us.
       <p style="margin-top: 40px; font-size: 0.9em; color: #777;">
         Submitted: ${new Date().toLocaleString()}
-      </p>
     </div>
   `;
 }
