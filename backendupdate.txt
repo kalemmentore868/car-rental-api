@@ -1,0 +1,15 @@
+after changes made 
+
+ssh into server 
+
+root@72.60.125.60
+w(I6-b8A/-GqXPWMS0(8
+
+cd /home/backend
+
+git pull
+
+npm build 
+
+pm2 restart all
+
