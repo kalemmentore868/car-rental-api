@@ -9,7 +9,11 @@ cd /home/backend
 
 git pull
 
-npm build 
+npm install
+npm run build 
+
+npm run build
+pm2 restart car-rental-api
 
 pm2 restart all
 
